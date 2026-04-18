@@ -40,12 +40,13 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const isLoading = ref(false)
 const form = ref({ username: '', password: '' })
 
-const handleLogin = async () => {
+/*const handleLogin = async () => {
   if (!form.value.username || !form.value.password) return
 
   isLoading.value = true
@@ -68,6 +69,12 @@ const handleLogin = async () => {
     console.error('登录失败:', error)
   } finally {
     isLoading.value = false
+  }
+}*/
+const handleLogin = async () => {
+  const success = await auth.login(form.value.username, form.value.password)
+  if (success) {
+    router.push('/index')
   }
 }
 </script>

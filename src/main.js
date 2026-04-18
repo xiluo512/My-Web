@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia';
 import App from './App.vue'
 import router from './router'
 
@@ -9,5 +10,9 @@ link.href = 'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400
 document.head.appendChild(link)
 
 const app = createApp(App)
+//使用pinia
+app.use(createPinia())
+//使用路由
 app.use(router)
+
 app.mount('#app')
