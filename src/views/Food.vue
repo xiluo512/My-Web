@@ -123,11 +123,11 @@ const cities = ref([
 
 // 风味分类数据
 const categories = ref([
-  { title: '经典鲁菜', desc: '中国八大菜系之首。品尝九转大肠、糖醋鲤鱼，感受咸鲜纯正、火候精湛的北方官菜魅力。', btn: '查看名店', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', action: 'famous-shops' },
-  { title: '胶东海鲜', desc: '源自青岛、烟台、威海。葱烧海参、油爆双脆、清蒸加吉鱼，原汁原味，鲜嫩爽口。', btn: '尝鲜海味', image: 'https://images.unsplash.com/photo-1534483509719-3feaee7c30da?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', action: 'seafood' },
-  { title: '地道小吃', desc: '济南把子肉、潍坊肉火烧、临沂糁汤。穿梭于市井巷弄，寻找最抚凡人心的烟火气。', btn: '探索小巷', image: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', action: 'street-food' },
-  { title: '孔府家宴', desc: '衍圣公府待客之礼。诗礼银杏、一品豆腐，食不厌精，脍不厌细，品味儒家饮食文化。', btn: '预约雅座', image: 'https://images.unsplash.com/photo-1549488347-1941d440b543?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', action: 'confucius-banquet' },
-  { title: '面食王国', desc: '山东是面食大省。胶东大饽饽、高桩馒头、手擀面，麦香浓郁，造型精美，寓意吉祥。', btn: '了解面食', image: 'https://images.unsplash.com/photo-1626804475297-411dbe66f81f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', action: 'noodles' },
+  { title: '经典鲁菜', desc: '中国八大菜系之首。品尝九转大肠、糖醋鲤鱼，感受咸鲜纯正、火候精湛的北方官菜魅力。', btn: '查看名店', image: '/assets/经典鲁菜.jpg', action: 'famous-shops' },
+  { title: '胶东海鲜', desc: '源自青岛、烟台、威海。葱烧海参、油爆双脆、清蒸加吉鱼，原汁原味，鲜嫩爽口。', btn: '尝鲜海味', image: '/assets/胶东海鲜.jpg', action: 'seafood' },
+  { title: '地道小吃', desc: '济南把子肉、潍坊肉火烧、临沂糁汤。穿梭于市井巷弄，寻找最抚凡人心的烟火气。', btn: '探索小巷', image: '/assets/地道小吃.jpg', action: 'street-food' },
+  { title: '孔府家宴', desc: '衍圣公府待客之礼。诗礼银杏、一品豆腐，食不厌精，脍不厌细，品味儒家饮食文化。', btn: '预约雅座', image: '/assets/孔府家宴.jpg', action: 'confucius-banquet' },
+  { title: '面食王国', desc: '山东是面食大省。胶东大饽饽、高桩馒头、手擀面，麦香浓郁，造型精美，寓意吉祥。', btn: '了解面食', image: '/assets/面食王国.jpg', action: 'noodles' },
   { title: '美酒佳酿', desc: '青岛啤酒、烟台葡萄酒、景芝白酒。举杯邀明月，感受微醺中的齐鲁豪情。', btn: '品酒地图', image: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', action: 'wine-map' }
 ])
 
@@ -143,9 +143,9 @@ const cityFlavors = ref([
 
 // 体验活动数据
 const experiences = ref([
-  { title: '鲁菜大师课', desc: '跟随非遗传承人学习“爆、炒、烧、炸”技法，亲手制作一道正宗九转大肠。', btn: '报名课程', image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', action: 'cooking-class' },
-  { title: '赶海拾贝与集市', desc: '清晨随渔民出海捕捞新鲜海货，或在早市挑选最新鲜的蔬果，体验食材源头。', btn: '预订行程', image: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', action: 'sea-market' },
-  { title: '青岛啤酒节狂欢', desc: '八月相约金沙滩，参与全球最大的啤酒盛会，举杯同庆，感受激情夏日。', btn: '查看活动', image: 'https://images.unsplash.com/photo-1575444758702-4a6b9222336e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', action: 'beer-festival' },
+  { title: '鲁菜大师课', desc: '跟随非遗传承人学习“爆、炒、烧、炸”技法，亲手制作一道正宗九转大肠。', btn: '报名课程', image: '/assets/鲁菜大师课.jpg', action: 'cooking-class' },
+  { title: '赶海拾贝与集市', desc: '清晨随渔民出海捕捞新鲜海货，或在早市挑选最新鲜的蔬果，体验食材源头。', btn: '预订行程', image: '/assets/赶海拾贝.jpg', action: 'sea-market' },
+  { title: '青岛啤酒节狂欢', desc: '八月相约金沙滩，参与全球最大的啤酒盛会，举杯同庆，感受激情夏日。', btn: '查看活动', image: '/assets/青岛啤酒节.jpg', action: 'beer-festival' },
   { title: '孔府宴礼仪体验', desc: '身着汉服，学习古代进食礼仪，品尝“食不厌精”的孔府家常菜，修身养性。', btn: '获取食谱', image: 'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', action: 'etiquette' }
 ])
 

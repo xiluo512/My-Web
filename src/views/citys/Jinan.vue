@@ -1,14 +1,15 @@
 <template>
-  <div class="city-page jinan">
+  <!-- 注意：这里用 :class="data.code" 动态绑定样式类 -->
+  <div class="city-page" :class="data.code">
 
-    <!-- 1. 第一屏：Hero 区域（标题 + 波纹） -->
+    <!-- 1. 第一屏：Hero 区域 -->
     <section class="jn-hero">
       <div class="jn-ripple"></div>
-      <h1 class="hero-title">泉城济南</h1>
-      <p class="hero-sub">四面荷花三面柳 · 一城山色半城湖</p>
+      <!-- 动态标题 -->
+      <h1 class="hero-title">{{ data.name }}</h1>
+      <p class="hero-sub">{{ data.slogan }}</p>
 
-      <!-- 向下滚动提示 -->
-      <div class="scroll-hint">↓ 探索泉城</div>
+      <div class="scroll-hint">↓ 探索{{ data.name.replace('泉城','').replace('魅力','') }}</div>
     </section>
 
     <!-- 2. 第二屏：视频独立展示区 -->
@@ -17,23 +18,40 @@
         <h2 class="section-title">城市映像</h2>
         <div class="video-wrapper">
           <VideoPlayer
-            :src="videoSrc"
+            :src="data.videoSrc"
             :auto-play="false"
             @play="onVideoPlay"
             @end="onVideoEnd"
           />
         </div>
-        <p class="video-desc">通过镜头，感受泉城的灵动与厚重</p>
+        <p class="video-desc">通过镜头，感受{{ data.name }}的灵动与厚重</p>
       </div>
     </section>
 
-    <!-- 3. 第三屏：景点网格卡片 -->
+    <!-- 3. 第三屏：景点网格卡片 (动态循环) -->
     <section class="jn-grid-section">
       <h2 class="section-title dark-title">必游胜地</h2>
       <div class="jn-grid">
-        <div class="jn-card"><h3>💧 趵突泉</h3><p>三窟并发腾空，声若隐雷震历下</p></div>
-        <div class="jn-card"><h3>🌊 大明湖</h3><p>历下秋风泛舟，超然楼夜揽星河</p></div>
-        <div class="jn-card"><h3>🛶 曲水亭街</h3><p>家家泉水垂杨，青石巷藏老城烟火</p></div>
+        <!-- 这里用 v-for 循环读取 data.spots -->
+        <div class="jn-card" v-for="spot in data.spots" :key="spot.name">
+          <h3>{{ spot.icon }} {{ spot.name }}</h3>
+          <p>{{ spot.desc }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 美食区块 (动态循环) -->
+    <section class="jn-food-section">
+      <h2 class="section-title dark-title">地道风味</h2>
+      <div class="jn-food-list">
+        <!-- 这里用 v-for 循环读取 data.food -->
+        <div class="food-item" v-for="item in data.food" :key="item.name">
+          <span class="food-icon">🍜</span>
+          <div class="food-info">
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.reason }}</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -43,23 +61,27 @@
 <script setup>
 import { ref } from 'vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
+// 🔑 核心：引入刚才创建的数据文件
+import citiesData from '@/data/citiesData.js'
 
-const cityCode = 'jinan'
-// 使用在线测试视频，或者改成你的本地路径 /video/jinan.mp4
-const videoSrc = '/video/jinan.mp4'
+// 🔑 核心：定义 CITY_CODE，其他城市组件只需改这一行
+const CITY_CODE = 'Jinan'
+
+// 🔑 核心：把数据赋值给 data 变量，这样模板里才能用 data.food
+const data = citiesData[CITY_CODE]
 
 const onVideoPlay = () => {
-  console.log('🎬 济南视频开始播放')
+  console.log(`🎬 ${data.name}视频开始播放`)
 }
 
 const onVideoEnd = () => {
-  console.log('🎬 济南视频播放结束')
+  console.log(` ${data.name}视频播放结束`)
 }
 </script>
 
 <style scoped>
-/* 基础变量 */
-.jinan {
+/* 基础变量 - 使用动态颜色 */
+.city-page {
   --primary: #2563eb;
   --bg-light: #f0f7f4;
   --text-dark: #2c3e50;
@@ -67,12 +89,15 @@ const onVideoEnd = () => {
   color: var(--text-dark);
   font-family: "KaiTi", serif;
   min-height: 100vh;
-  overflow-x: hidden; /* 防止横向滚动 */
+  overflow-x: hidden;
 }
+
+/* 如果要在不同城市用不同颜色，可以在 JS 里动态修改 --primary */
+/* 这里暂时保持济南的蓝色，或者你可以在 script 里用 style 绑定 */
 
 /* ================= 1. Hero 首屏区域 ================= */
 .jn-hero {
-  height: 100vh; /* 占满一屏 */
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -99,7 +124,6 @@ const onVideoEnd = () => {
   font-weight: 400;
 }
 
-/* 波纹动画定位 */
 .jn-ripple {
   width: 300px;
   height: 300px;
@@ -121,7 +145,6 @@ const onVideoEnd = () => {
   animation: jn-r 5s infinite linear reverse;
 }
 
-/* 滚动提示 */
 .scroll-hint {
   position: absolute;
   bottom: 40px;
@@ -144,7 +167,7 @@ const onVideoEnd = () => {
 .jn-video-section {
   background: #f0f7f4;
   padding: 0;
-  min-height: 80vh; /* 至少占满一屏 */
+  min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -176,27 +199,24 @@ const onVideoEnd = () => {
 .video-wrapper {
   width: 90%;
   max-width: 720px;
-  height: 450px;  /* 固定高度，保持比例 */
+  height: 450px;
   margin: 30px auto;
-  background: #fff; /* 白色背景 */
-  border-radius: 16px; /* 圆角 */
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); /* 阴影 */
-  overflow: hidden; /* 隐藏溢出 */
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
   position: relative;
 }
-/* 穿透样式：让组件填满容器 */
 :deep(.video-player) {
   width: 100% !important;
   height: 100% !important;
   margin: 0 !important;
 }
-
 :deep(.video-container) {
   width: 100% !important;
   height: 100% !important;
-  border-radius: 0 !important; /* 继承父级的圆角 */
+  border-radius: 0 !important;
 }
-
 
 .video-desc {
   margin-top: 30px;
@@ -252,5 +272,57 @@ const onVideoEnd = () => {
   color: #667;
   line-height: 1.8;
   font-size: 16px;
+}
+
+/* ================= 4. 美食区块样式 ================= */
+.jn-food-section {
+  padding: 80px 20px;
+  background: #fff;
+  text-align: center;
+}
+
+.jn-food-list {
+  max-width: 900px;
+  margin: 50px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.food-item {
+  flex: 1 1 300px;
+  background: #fdfdfd;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  text-align: left;
+  transition: 0.3s;
+}
+
+.food-item:hover {
+  border-color: var(--primary);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.food-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.food-info h4 {
+  margin: 0 0 8px;
+  color: var(--text-dark);
+  font-size: 18px;
+}
+
+.food-info p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
 }
 </style>

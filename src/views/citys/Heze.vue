@@ -1,22 +1,22 @@
 <template>
-  <div class="city-page heze">
+  <div class="city-page heze" :class="data.code">
 
     <!-- 1. 第一屏：Hero 区域（牡丹主题背景 + 标题） -->
     <section class="hz-hero">
-      <h1 class="hero-title">菏泽</h1>
-      <p class="hero-sub">中国牡丹之都 · 戏曲之乡</p>
+      <h1 class="hero-title">{{ data.name }}</h1>
+      <p class="hero-sub">{{ data.slogan }}</p>
 
       <!-- 向下滚动提示 -->
       <div class="scroll-hint">↓ 探索牡丹之都</div>
     </section>
 
-    <!-- 2. 第二屏：视频独立展示区（济南布局 + 菏泽粉色风格） -->
+    <!-- 2. 第二屏：视频独立展示区 -->
     <section class="hz-video-section">
       <div class="section-inner">
         <h2 class="section-title">城市映像</h2>
         <div class="video-wrapper">
           <VideoPlayer
-            :src="videoSrc"
+            :src="data.videoSrc"
             :auto-play="false"
             @play="onVideoPlay"
             @end="onVideoEnd"
@@ -27,13 +27,29 @@
       </div>
     </section>
 
-    <!-- 3. 第三屏：花瓣形状景点卡片（保留菏泽特色） -->
+    <!-- 3. 第三屏：花瓣形状景点卡片（动态数据渲染） -->
     <section class="hz-bloom-section">
       <h2 class="section-title dark-title">必游胜地</h2>
       <div class="hz-bloom">
-        <div class="hz-petal"><h3>🌺 曹州牡丹园</h3><p>世界最大牡丹园，千品万色竞芳菲</p></div>
-        <div class="hz-petal"><h3>🥋 水浒好汉城</h3><p>郓城古建武市井，忠义豪情荡心胸</p></div>
-        <div class="hz-petal"><h3>🎭 山东梆子戏台</h3><p>高亢悲壮活态传，非遗戏曲韵悠长</p></div>
+        <!-- 遍历景点数据，每个都是花瓣形状 -->
+        <div class="hz-petal" v-for="spot in data.spots" :key="spot.name">
+          <h3>{{ spot.icon }} {{ spot.name }}</h3>
+          <p>{{ spot.desc }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 第四屏：国潮风美食列表（新增，风格统一） -->
+    <section class="hz-food-section">
+      <h2 class="section-title dark-title">地道风味</h2>
+      <div class="hz-food-list">
+        <div class="hz-food-item" v-for="item in data.food" :key="item.name">
+          <span class="hz-food-icon"></span>
+          <div class="hz-food-info">
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.reason }}</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -41,25 +57,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
+import citiesData from '@/data/citiesData.js'
+
+// 🔑 核心：绑定城市代码，自动读取配置
+const CITY_CODE = 'Heze'
+const data = citiesData[CITY_CODE]
 
 // --- 视频逻辑 ---
-const cityCode = 'heze'
-// 先用在线测试视频，本地视频准备好后改成 `/video/${cityCode}.mp4`
- const videoSrc = `/video/${cityCode}.mp4`
-
-const onVideoPlay = () => {
-  console.log('🎬 菏泽视频开始播放')
-}
-
-const onVideoEnd = () => {
-  console.log('🎬 菏泽视频播放结束')
-}
-
-const onVideoError = (e) => {
-  console.error('❌ 视频错误:', e)
-}
+const onVideoPlay = () => console.log(`🎬 ${data.name}视频开始播放`)
+const onVideoEnd = () => console.log(`🎬 ${data.name}视频播放结束`)
+const onVideoError = (e) => console.error('❌ 视频错误:', e)
 </script>
 
 <style scoped>
@@ -127,7 +135,7 @@ const onVideoError = (e) => {
 
 .hero-title {
   font-size: clamp(48px, 8vw, 80px);
-  color: var(--accent);  /* ✅ 牡丹粉标题 */
+  color: var(--accent);
   z-index: 2;
   letter-spacing: 0.2em;
   text-shadow: 0 4px 16px rgba(157,23,77,0.6);
@@ -135,14 +143,13 @@ const onVideoError = (e) => {
 }
 
 .hero-sub {
-  color: var(--gold);  /* ✅ 金色副标题 */
+  color: var(--gold);
   z-index: 2;
   margin-top: 8px;
   font-size: 20px;
   letter-spacing: 0.4em;
 }
 
-/* 滚动提示动画 */
 .scroll-hint {
   position: absolute;
   bottom: 40px;
@@ -159,13 +166,13 @@ const onVideoError = (e) => {
   60% {transform: translateY(-5px);}
 }
 
-/* ================= 2. 视频独立区域（济南布局 + 菏泽风格） ================= */
+/* ================= 2. 视频独立区域 ================= */
 .hz-video-section {
   min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-light);  /* ✅ 保持菏泽浅粉背景 */
+  background: var(--bg-light);
   padding: 80px 20px;
 }
 
@@ -177,7 +184,7 @@ const onVideoError = (e) => {
 
 .section-title {
   font-size: 36px;
-  color: var(--primary);  /* ✅ 牡丹红标题 */
+  color: var(--primary);
   margin-bottom: 40px;
   letter-spacing: 0.2em;
   position: relative;
@@ -193,85 +200,64 @@ const onVideoError = (e) => {
   margin: 15px auto 0;
 }
 
-/* 视频容器 - 济南同款尺寸，菏泽同款粉色系 */
 .video-wrapper {
   width: 90%;
   max-width: 720px;
   height: 450px;
   margin: 30px auto;
-  background: #fff;        /* ✅ 白色背景衬托视频 */
-  border: 3px solid var(--accent);  /* ✅ 粉色边框，牡丹特色 */
+  background: #fff;
+  border: 3px solid var(--accent);
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(157,23,77,0.2);  /* ✅ 粉色阴影 */
+  box-shadow: 0 20px 60px rgba(157,23,77,0.2);
   overflow: hidden;
   position: relative;
 }
 
-/* 穿透样式：让 VideoPlayer 组件填满容器 */
-:deep(.video-player) {
-  width: 100% !important;
-  height: 100% !important;
-  margin: 0 !important;
-}
-
-:deep(.video-container) {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 0 !important;
-  background: #000 !important;
-}
-
-:deep(.video-container video) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+:deep(.video-player) { width: 100% !important; height: 100% !important; margin: 0 !important; }
+:deep(.video-container) { width: 100% !important; height: 100% !important; border-radius: 0 !important; background: #000 !important; }
+:deep(.video-container video) { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .video-desc {
   margin-top: 30px;
-  color: #6b7280;  /* ✅ 深灰色文字，适配浅色背景 */
+  color: #6b7280;
   font-size: 16px;
   letter-spacing: 0.1em;
 }
 
-/* ================= 3. 花瓣卡片区域（100% 保留菏泽特色） ================= */
+/* ================= 3. 花瓣卡片区域（保留造型） ================= */
 .hz-bloom-section {
   padding: 100px 20px;
-  background: #fff;  /* ✅ 白色背景，突出花瓣卡片 */
+  background: #fff;
   text-align: center;
 }
 
-.dark-title {
-  color: var(--text-dark);
-}
+.dark-title { color: var(--text-dark); }
+.dark-title::after { background: var(--gold); }
 
-.dark-title::after {
-  background: var(--gold);  /* ✅ 金色下划线，菏泽特色 */
-}
-
-/* 花瓣容器 - 保持垂直排列 */
+/* 花瓣容器 */
 .hz-bloom {
   max-width: 800px;
   margin: 60px auto 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;  /* ✅ 增加间距 */
+  gap: 30px;
   align-items: center;
 }
 
-/* 花瓣卡片 - 100% 保留原有造型 */
+/* 花瓣卡片 - 核心特色 */
 .hz-petal {
   width: 90%;
   max-width: 600px;
   padding: 32px 24px;
-  background: rgba(157,23,77,0.08);  /* ✅ 半透明牡丹红 */
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;  /* ✅ 花瓣形状 */
+  background: rgba(157,23,77,0.08);
+  /* 核心：花瓣圆角 */
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   border: 2px solid rgba(190,24,93,0.3);
   text-align: center;
   transition: all 0.4s ease;
   backdrop-filter: blur(4px);
   color: var(--text-dark);
+  min-height: 140px;
 }
 
 .hz-petal:hover {
@@ -291,5 +277,66 @@ const onVideoError = (e) => {
   color: #6b7280;
   line-height: 1.8;
   font-size: 16px;
+}
+
+/* ================= 4. 国潮风美食区域（新增） ================= */
+.hz-food-section {
+  padding: 100px 20px;
+  background: #fff5f8; /* 极淡的粉色背景 */
+  text-align: center;
+}
+
+.hz-food-list {
+  max-width: 1000px;
+  margin: 60px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+/* 美食卡片采用柔和圆角，配合粉色边框 */
+.hz-food-item {
+  flex: 1 1 300px;
+  padding: 24px 20px;
+  background: #fff;
+  border: 2px solid rgba(157,23,77,0.2);
+  border-radius: 20px; /* 柔和圆角 */
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  transition: 0.3s;
+}
+
+.hz-food-item:hover {
+  border-color: var(--primary);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(157,23,77,0.15);
+}
+
+.hz-food-icon {
+  font-size: 28px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(253, 230, 138, 0.3); /* 金色背景点缀 */
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.hz-food-info h4 {
+  margin: 0 0 6px;
+  color: var(--primary);
+  font-size: 18px;
+}
+
+.hz-food-info p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.6;
 }
 </style>

@@ -1,10 +1,9 @@
 <template>
   <div class="city-page zaozhuang">
-
     <!-- 1. Hero 区域 -->
     <section class="zz-hero">
-      <h1 class="hero-title">枣庄</h1>
-      <p class="hero-sub">运河古城 · 榴花似火</p>
+      <h1 class="hero-title">{{ data.name }}</h1>
+      <p class="hero-sub">{{ data.slogan }}</p>
       <div class="scroll-hint">↓ 探索古城</div>
     </section>
 
@@ -14,13 +13,13 @@
         <h2 class="section-title">城市映像</h2>
         <div class="video-wrapper">
           <VideoPlayer
-            :src="videoSrc"
+            :src="data.videoSrc"
             :auto-play="false"
             @play="onVideoPlay"
             @end="onVideoEnd"
           />
         </div>
-        <p class="video-desc">运河古韵传千古，榴花似火映红城</p>
+        <p class="video-desc">{{ data.videoDesc }}</p>
       </div>
     </section>
 
@@ -28,9 +27,24 @@
     <section class="zz-grid-section">
       <h2 class="section-title dark-title">必游胜地</h2>
       <div class="zz-grid">
-        <div class="zz-item"><h3>🛶 台儿庄古城</h3><p>天下第一庄，桨声灯影活水乡，运河文化活化石</p></div>
-        <div class="zz-item"><h3>🌺 冠世榴园</h3><p>五月红霞照青山，万亩榴花似火海，吉尼斯世界之最</p></div>
-        <div class="zz-item"><h3>🎬 铁道游击队影视城</h3><p>芦苇烽火刻铁轨，红色经典拍摄地，重温峥嵘岁月</p></div>
+        <div class="zz-item" v-for="spot in data.spots" :key="spot.name">
+          <h3>{{ spot.icon }} {{ spot.name }}</h3>
+          <p>{{ spot.desc }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 美食区块 -->
+    <section class="zz-food-section">
+      <h2 class="section-title dark-title">地道风味</h2>
+      <div class="zz-food-list">
+        <div class="food-item" v-for="item in data.food" :key="item.name">
+          <span class="food-icon">🍜</span>
+          <div class="food-info">
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.reason }}</p>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -39,17 +53,19 @@
 <script setup>
 import { ref } from 'vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
+import citiesData from '@/data/citiesData.js'
 
-const videoSrc = `/video/zaozhuang.mp4`
+const CITY_CODE = 'Zaozhuang'
+const data = citiesData[CITY_CODE]
 
-const onVideoPlay = () => console.log('🎬 枣庄视频播放')
-const onVideoEnd = () => console.log('🎬 枣庄视频结束')
+const onVideoPlay = () => console.log(`🎬 ${data.name}视频播放`)
+const onVideoEnd = () => console.log(`🎬 ${data.name}视频结束`)
 </script>
 
 <style scoped>
 .zaozhuang {
-  --primary: #556b2f; /* 古城绿 */
-  --accent: #dc143c;  /* 榴花红 */
+  --primary: #556b2f;
+  --accent: #dc143c;
   --bg-dark: #0f1a15;
   --text-light: #e2e8f0;
 
@@ -60,7 +76,6 @@ const onVideoEnd = () => console.log('🎬 枣庄视频结束')
   overflow-x: hidden;
 }
 
-/* Hero 保持纹理 */
 .zz-hero {
   height: 100vh;
   display: flex;
@@ -174,7 +189,6 @@ const onVideoEnd = () => console.log('🎬 枣庄视频结束')
   overflow: hidden;
   text-align: left;
 }
-/* 左侧红线装饰 */
 .zz-item::after {
   content: "";
   position: absolute;
@@ -191,4 +205,38 @@ const onVideoEnd = () => console.log('🎬 枣庄视频结束')
 }
 .zz-item h3 { font-size: 20px; color: var(--text-light); margin-bottom: 10px; }
 .zz-item p { color: #cbd5e1; line-height: 1.6; }
+
+/* 美食区块 */
+.zz-food-section { padding: 80px 20px; background: var(--bg-dark); text-align: center; }
+.zz-food-list { max-width: 900px; margin: 50px auto 0; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+
+.food-item {
+  flex: 1 1 300px;
+  background: rgba(85,107,47,0.2);
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  text-align: left;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.food-item::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent);
+}
+
+.food-item:hover { background: rgba(47,79,79,0.6); transform: scale(1.03); box-shadow: 0 12px 24px rgba(220, 20, 60, 0.2); }
+.food-icon { font-size: 28px; line-height: 1; }
+.food-info h4 { margin: 0 0 8px; color: var(--text-light); font-size: 18px; }
+.food-info p { margin: 0; color: #cbd5e1; font-size: 14px; line-height: 1.6; }
 </style>

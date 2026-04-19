@@ -3,20 +3,20 @@
 
     <!-- 1. 第一屏：Hero 区域（旋转光晕背景 + 标题） -->
     <section class="dz-hero">
-      <h1 class="hero-title">德州</h1>
-      <p class="hero-sub">九达天衢 · 太阳之城</p>
+      <h1 class="hero-title">{{ data.name }}</h1>
+      <p class="hero-sub">{{ data.slogan }}</p>
 
       <!-- 向下滚动提示 -->
       <div class="scroll-hint">↓ 探索太阳城</div>
     </section>
 
-    <!-- 2. 第二屏：视频独立展示区（济南布局 + 德州工业风） -->
+    <!-- 2. 第二屏：视频独立展示区 -->
     <section class="dz-video-section">
       <div class="section-inner">
         <h2 class="section-title">城市映像</h2>
         <div class="video-wrapper">
           <VideoPlayer
-            :src="videoSrc"
+            :src="data.videoSrc"
             :auto-play="false"
             @play="onVideoPlay"
             @end="onVideoEnd"
@@ -27,13 +27,28 @@
       </div>
     </section>
 
-    <!-- 3. 第三屏：工业风网格卡片（100% 保留德州特色） -->
+    <!-- 3. 第三屏：工业风网格卡片（动态数据渲染） -->
     <section class="dz-grid-section">
       <h2 class="section-title dark-title">必游胜地</h2>
       <div class="dz-grid">
-        <div class="dz-card"><h3>☀️ 中国太阳谷</h3><p>微排大厦低碳试，绿色能源新标杆</p></div>
-        <div class="dz-card"><h3>🍗 德州扒鸡老街</h3><p>五香脱骨百年艺，味蕾上的非遗传承</p></div>
-        <div class="dz-card"><h3>📜 董子文化街</h3><p>汉代大儒正统传，儒家文化润人心</p></div>
+        <div class="dz-card" v-for="spot in data.spots" :key="spot.name">
+          <h3>{{ spot.icon }} {{ spot.name }}</h3>
+          <p>{{ spot.desc }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 第四屏：工业风美食列表（新增，风格统一） -->
+    <section class="dz-food-section">
+      <h2 class="section-title dark-title">地道风味</h2>
+      <div class="dz-food-list">
+        <div class="dz-food-item" v-for="item in data.food" :key="item.name">
+          <span class="dz-food-icon">🍗</span>
+          <div class="dz-food-info">
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.reason }}</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -41,26 +56,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
+import citiesData from '@/data/citiesData.js'
 
-// --- 视频逻辑 ---
-const cityCode = 'dezhou'
-// 先用在线测试视频，本地视频准备好后改成 `/video/${cityCode}.mp4`
+// 🔑 核心：绑定城市代码，自动读取配置
+const CITY_CODE = 'Dezhou'
+const data = citiesData[CITY_CODE]
 
- const videoSrc = `/video/${cityCode}.mp4`  // ← 本地视频用这行
-
-const onVideoPlay = () => {
-  console.log('🎬 德州视频开始播放')
-}
-
-const onVideoEnd = () => {
-  console.log('🎬 德州视频播放结束')
-}
-
-const onVideoError = (e) => {
-  console.error('❌ 视频错误:', e)
-}
+const onVideoPlay = () => console.log('🎬 德州视频开始播放')
+const onVideoEnd = () => console.log('🎬 德州视频播放结束')
+const onVideoError = (e) => console.error('❌ 视频错误:', e)
 </script>
 
 <style scoped>
@@ -129,7 +134,7 @@ const onVideoError = (e) => {
 
 .hero-title {
   font-size: clamp(48px, 8vw, 80px);
-  color: var(--gold);  /* ✅ 太阳金标题 */
+  color: var(--gold);
   z-index: 2;
   letter-spacing: 0.1em;
   text-shadow: 0 4px 16px rgba(234,88,12,0.4);
@@ -137,14 +142,13 @@ const onVideoError = (e) => {
 }
 
 .hero-sub {
-  color: #94a3b8;  /* ✅ 浅灰副标题 */
+  color: #94a3b8;
   z-index: 2;
   margin-top: 8px;
   font-size: 20px;
   letter-spacing: 0.4em;
 }
 
-/* 滚动提示动画 */
 .scroll-hint {
   position: absolute;
   bottom: 40px;
@@ -161,13 +165,13 @@ const onVideoError = (e) => {
   60% {transform: translateY(-5px);}
 }
 
-/* ================= 2. 视频独立区域（济南布局 + 德州风格） ================= */
+/* ================= 2. 视频独立区域 ================= */
 .dz-video-section {
   min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #86efac;  /* ✅ 深色背景，呼应 Hero 底部 */
+  background: #86efac;
   padding: 80px 20px;
 }
 
@@ -179,7 +183,7 @@ const onVideoError = (e) => {
 
 .section-title {
   font-size: 36px;
-  color: var(--gold);  /* ✅ 金色标题 */
+  color: var(--gold);
   margin-bottom: 40px;
   letter-spacing: 0.2em;
   position: relative;
@@ -191,77 +195,52 @@ const onVideoError = (e) => {
   display: block;
   width: 60px;
   height: 3px;
-  background: var(--primary);  /* ✅ 橙色下划线 */
+  background: var(--primary);
   margin: 15px auto 0;
 }
 
-/* 视频容器 - 济南同款尺寸，德州同款深色 */
 .video-wrapper {
   width: 90%;
   max-width: 720px;
   height: 450px;
   margin: 30px auto;
-  background: #000;        /* ✅ 纯黑背景 */
-  border: 2px solid #333;  /* ✅ 深灰边框，工业感 */
-  border-radius: 4px;      /* ✅ 小圆角，更硬朗 */
+  background: #000;
+  border: 2px solid #333;
+  border-radius: 4px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   position: relative;
 }
 
-/* 穿透样式：让 VideoPlayer 组件填满容器 */
-:deep(.video-player) {
-  width: 100% !important;
-  height: 100% !important;
-  margin: 0 !important;
-}
-
-:deep(.video-container) {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 0 !important;
-  background: #000 !important;
-}
-
-:deep(.video-container video) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+:deep(.video-player) { width: 100% !important; height: 100% !important; margin: 0 !important; }
+:deep(.video-container) { width: 100% !important; height: 100% !important; border-radius: 0 !important; background: #000 !important; }
+:deep(.video-container video) { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .video-desc {
   margin-top: 30px;
-  color: #94a3b8;  /* ✅ 浅灰文字，适配深色背景 */
+  color: #94a3b8;
   font-size: 16px;
   letter-spacing: 0.1em;
 }
 
-/* ================= 3. 工业风网格卡片区域（100% 保留德州特色） ================= */
+/* ================= 3. 工业风网格卡片区域 ================= */
 .dz-grid-section {
   padding: 100px 20px;
-  background: var(--bg-dark);  /* ✅ 深绿背景，延续主题 */
+  background: var(--bg-dark);
   text-align: center;
 }
 
-.dark-title {
-  color: var(--text-light);
-}
+.dark-title { color: var(--text-light); }
+.dark-title::after { background: var(--primary); }
 
-.dark-title::after {
-  background: var(--primary);  /* ✅ 橙色下划线 */
-}
-
-/* 网格容器 - 保留原有布局 */
 .dz-grid {
   max-width: 950px;
   margin: 60px auto 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;  /* ✅ 稍微增加间距 */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
 }
 
-/* 工业风卡片 - 100% 保留原有造型 */
 .dz-card {
   padding: 24px 20px;
   background: var(--card-bg);
@@ -270,10 +249,11 @@ const onVideoError = (e) => {
   transition: all 0.3s ease;
   text-align: left;
   color: var(--text-light);
-  overflow: hidden;  /* ✅ 防止切角溢出 */
+  overflow: hidden;
+  min-height: 160px; /* 防塌陷 */
 }
 
-/* 右上角橙色切角装饰 */
+/* 右上角橙色切角装饰 - 核心特色 */
 .dz-card::after {
   content: "";
   position: absolute;
@@ -281,13 +261,13 @@ const onVideoError = (e) => {
   right: 0;
   width: 0;
   height: 0;
-  border-top: 24px solid var(--primary);  /* ✅ 橙色切角 */
+  border-top: 24px solid var(--primary);
   border-left: 24px solid transparent;
 }
 
 .dz-card:hover {
   border-color: var(--primary);
-  box-shadow: 0 0 20px rgba(234,88,12,0.4);  /* ✅ 橙色发光 */
+  box-shadow: 0 0 20px rgba(234,88,12,0.4);
   transform: translateY(-4px);
 }
 
@@ -304,10 +284,76 @@ const onVideoError = (e) => {
   font-size: 15px;
 }
 
-/* 移动端适配 */
-@media (max-width: 700px) {
-  .dz-grid {
-    grid-template-columns: 1fr;
-  }
+/* ================= 4. 工业风美食区域（新增） ================= */
+.dz-food-section {
+  padding: 100px 20px;
+  background: #0f1218; /* 更深的背景，突出美食 */
+  text-align: center;
+}
+
+.dz-food-list {
+  max-width: 1000px;
+  margin: 60px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.dz-food-item {
+  flex: 1 1 300px;
+  background: var(--card-bg);
+  border: 2px solid #333;
+  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 美食卡片也保留右上角切角特色 */
+.dz-food-item::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 20px solid var(--accent); /* 绿色切角，区分景点 */
+  border-left: 20px solid transparent;
+}
+
+.dz-food-item:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(234,88,12,0.2);
+}
+
+.dz-food-icon {
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(234,88,12,0.15);
+  border-radius: 4px; /* 稍微硬朗的圆角 */
+  flex-shrink: 0;
+}
+
+.dz-food-info h4 {
+  margin: 0 0 6px;
+  color: var(--gold);
+  font-size: 17px;
+}
+
+.dz-food-info p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1.6;
 }
 </style>

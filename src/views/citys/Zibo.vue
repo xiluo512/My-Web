@@ -1,75 +1,79 @@
 <template>
   <div class="city-page zibo">
-
-    <!-- 1. 第一屏：Hero 区域（旋转窑炉 + 标题） -->
+    <!-- 1. Hero 区域 -->
     <section class="zb-hero">
       <div class="zb-kiln"></div>
-      <h1 class="hero-title">淄博</h1>
-      <p class="hero-sub">齐风韶韵 · 窑火人间</p>
-
-      <!-- 向下滚动提示 -->
+      <h1 class="hero-title">{{ data.name }}</h1>
+      <p class="hero-sub">{{ data.slogan }}</p>
       <div class="scroll-hint">↓ 探索瓷都</div>
     </section>
 
-    <!-- 2. 第二屏：视频独立展示区（济南布局 + 淄博暖火风） -->
+    <!-- 2. 视频区域 -->
     <section class="zb-video-section">
       <div class="section-inner">
         <h2 class="section-title">城市映像</h2>
         <div class="video-wrapper">
           <VideoPlayer
-            :src="videoSrc"
+            :src="data.videoSrc"
             :auto-play="false"
             @play="onVideoPlay"
             @end="onVideoEnd"
-            @error="onVideoError"
           />
         </div>
-        <p class="video-desc">千年窑火不熄，人间烟火长明</p>
+        <p class="video-desc">{{ data.videoDesc }}</p>
       </div>
     </section>
 
-    <!-- 3. 第三屏：景点网格卡片（100% 保留淄博特色） -->
+    <!-- 3. 景点卡片 -->
     <section class="zb-grid-section">
       <h2 class="section-title dark-title">必游胜地</h2>
       <div class="zb-grid">
-        <div class="zb-card"><h3>📖 海岱楼钟书阁</h3><p>琉璃穹顶映书香，东方美学新地标，最美书店打卡地</p></div>
-        <div class="zb-card"><h3>🏮 周村古商城</h3><p>活态商业博物馆，大染坊青石回响，天下第一村传奇</p></div>
-        <div class="zb-card"><h3>🍢 八大局市井</h3><p>小饼烤炉加蘸料，炭火升腾人情味，网红烟火气聚集地</p></div>
+        <div class="zb-card" v-for="spot in data.spots" :key="spot.name">
+          <h3>{{ spot.icon }} {{ spot.name }}</h3>
+          <p>{{ spot.desc }}</p>
+        </div>
       </div>
     </section>
 
+    <!-- 4. 美食区块 -->
+    <section class="zb-food-section">
+      <h2 class="section-title dark-title">地道风味</h2>
+      <div class="zb-food-list">
+        <div class="food-item" v-for="item in data.food" :key="item.name">
+          <span class="food-icon">🍜</span>
+          <div class="food-info">
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.reason }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
+import citiesData from '@/data/citiesData.js'
 
-// --- 视频逻辑 ---
-const cityCode = 'zibo'
-// 先用在线测试视频，本地视频准备好后改成 `/video/${cityCode}.mp4`
-const videoSrc = `/video/${cityCode}.mp4`  // ← 本地视频用这行
+const CITY_CODE = 'Zibo'
+const data = citiesData[CITY_CODE]
 
 const onVideoPlay = () => {
-  console.log('🎬 淄博视频开始播放')
+  console.log(`🎬 ${data.name}视频开始播放`)
 }
 
 const onVideoEnd = () => {
-  console.log('🎬 淄博视频播放结束')
-}
-
-const onVideoError = (e) => {
-  console.error('❌ 视频错误:', e)
+  console.log(`🎬 ${data.name}视频播放结束`)
 }
 </script>
 
 <style scoped>
-/* ========== 淄博主题变量（窑火红 + 琉璃金 + 羊皮纸色） ========== */
 .zibo {
-  --primary: #B22222;      /* 窑火红 */
-  --accent: #FFD700;       /* 琉璃金 */
-  --bg-warm: #1a0f0f;      /* 暖深褐背景 */
-  --text-light: #f5e6d3;   /* 羊皮纸色 */
+  --primary: #B22222;
+  --accent: #FFD700;
+  --bg-warm: #1a0f0f;
+  --text-light: #f5e6d3;
   --text-muted: #d4b896;
 
   background: var(--bg-warm);
@@ -79,7 +83,6 @@ const onVideoError = (e) => {
   overflow-x: hidden;
 }
 
-/* ================= 1. Hero 首屏区域（保留窑炉旋转动画） ================= */
 .zb-hero {
   height: 100vh;
   display: flex;
@@ -92,7 +95,6 @@ const onVideoError = (e) => {
   overflow: hidden;
 }
 
-/* 旋转窑炉动画 */
 .zb-kiln {
   width: 140px;
   height: 140px;
@@ -134,7 +136,6 @@ const onVideoError = (e) => {
   margin-top: 8px;
 }
 
-/* 滚动提示动画 */
 .scroll-hint {
   position: absolute;
   bottom: 40px;
@@ -151,41 +152,28 @@ const onVideoError = (e) => {
   60% {transform: translateY(-5px);}
 }
 
-/* ================= 2. 视频独立区域（济南布局 + 淄博风格） ================= */
+/* 视频区域 */
 .zb-video-section {
   min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #2c1810;  /* ✅ 暖深褐背景，呼应窑火 */
+  background: #2c1810;
   padding: 80px 20px;
 }
-
-.section-inner {
-  max-width: 1000px;
-  width: 100%;
-  text-align: center;
-}
-
+.section-inner { max-width: 1000px; width: 100%; text-align: center; }
 .section-title {
   font-size: 36px;
-  color: var(--accent);  /* ✅ 琉璃金标题 */
+  color: var(--accent);
   margin-bottom: 40px;
   letter-spacing: 0.2em;
-  position: relative;
   display: inline-block;
+  position: relative;
 }
-
 .section-title::after {
-  content: '';
-  display: block;
-  width: 60px;
-  height: 3px;
-  background: var(--primary);  /* ✅ 窑火红下划线 */
-  margin: 15px auto 0;
+  content: ''; display: block; width: 60px; height: 3px; background: var(--primary); margin: 15px auto 0;
 }
 
-/* 视频容器 - 济南同款尺寸，淄博同款暖色边框 */
 .video-wrapper {
   width: 90%;
   max-width: 720px;
@@ -196,51 +184,17 @@ const onVideoError = (e) => {
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 0 30px rgba(178, 34, 34, 0.3);
-  position: relative;
 }
+:deep(.video-player) { width: 100% !important; height: 100% !important; margin: 0 !important; }
+:deep(.video-container) { width: 100% !important; height: 100% !important; border-radius: 0 !important; background: #000 !important; }
+:deep(.video-container video) { width: 100%; height: 100%; object-fit: cover; }
 
-/* 穿透样式：让 VideoPlayer 组件填满容器 */
-:deep(.video-player) {
-  width: 100% !important;
-  height: 100% !important;
-  margin: 0 !important;
-}
+.video-desc { margin-top: 30px; color: var(--text-muted); font-size: 16px; letter-spacing: 0.1em; }
 
-:deep(.video-container) {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 0 !important;
-  background: #000 !important;
-}
-
-:deep(.video-container video) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.video-desc {
-  margin-top: 30px;
-  color: var(--text-muted);
-  font-size: 16px;
-  letter-spacing: 0.1em;
-}
-
-/* ================= 3. 景点网格区域（100% 保留淄博特色） ================= */
-.zb-grid-section {
-  padding: 100px 20px;
-  background: var(--bg-warm);
-  text-align: center;
-}
-
-.dark-title {
-  color: var(--text-light);
-}
-
-.dark-title::after {
-  background: var(--accent);  /* ✅ 金色下划线 */
-}
+/* 景点区域 */
+.zb-grid-section { padding: 100px 20px; background: var(--bg-warm); text-align: center; }
+.dark-title { color: var(--text-light); }
+.dark-title::after { background: var(--accent); }
 
 .zb-grid {
   max-width: 1000px;
@@ -249,8 +203,6 @@ const onVideoError = (e) => {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
 }
-
-/* 淄博特色卡片：毛玻璃 + 悬停微旋转 */
 .zb-card {
   background: rgba(60,30,20,0.7);
   border: 1px solid rgba(180,80,30,0.3);
@@ -261,22 +213,38 @@ const onVideoError = (e) => {
   text-align: left;
   color: var(--text-light);
 }
-
 .zb-card:hover {
-  transform: translateY(-6px) rotate(-1deg);  /* ✅ 保留原有的微旋转悬停效果 */
+  transform: translateY(-6px) rotate(-1deg);
   box-shadow: 0 16px 32px rgba(180,80,30,0.3);
   border-color: var(--accent);
 }
+.zb-card h3 { font-size: 20px; color: var(--accent); margin-bottom: 10px; }
+.zb-card p { color: var(--text-muted); line-height: 1.6; font-size: 15px; }
 
-.zb-card h3 {
-  font-size: 20px;
-  color: var(--accent);
-  margin-bottom: 10px;
+/* 美食区块 */
+.zb-food-section { padding: 80px 20px; background: var(--bg-warm); text-align: center; }
+.zb-food-list { max-width: 900px; margin: 50px auto 0; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+
+.food-item {
+  flex: 1 1 300px;
+  background: rgba(60,30,20,0.7);
+  border: 1px solid rgba(180,80,30,0.3);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  text-align: left;
+  transition: 0.3s;
+  border-radius: 16px;
 }
 
-.zb-card p {
-  color: var(--text-muted);
-  line-height: 1.6;
-  font-size: 15px;
+.food-item:hover {
+  transform: rotate(-1deg);
+  box-shadow: 0 16px 32px rgba(180,80,30,0.3);
+  border-color: var(--accent);
 }
+.food-icon { font-size: 28px; line-height: 1; }
+.food-info h4 { margin: 0 0 8px; color: var(--accent); font-size: 18px; }
+.food-info p { margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.6; }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div class="city-page weihai">
-
     <!-- 1. Hero 区域 -->
     <section class="wh-hero">
-      <h1 class="hero-title">威海</h1>
-      <p class="hero-sub">宜居海岸 · 甲午风云</p>
+      <div class="wh-light"></div>
+      <h1 class="hero-title">{{ data.name }}</h1>
+      <p class="hero-sub">{{ data.slogan }}</p>
       <div class="scroll-hint">↓ 探索威海</div>
     </section>
 
@@ -14,13 +14,13 @@
         <h2 class="section-title">城市映像</h2>
         <div class="video-wrapper">
           <VideoPlayer
-            :src="videoSrc"
+            :src="data.videoSrc"
             :auto-play="false"
             @play="onVideoPlay"
             @end="onVideoEnd"
           />
         </div>
-        <p class="video-desc">走遍四海，还是威海</p>
+        <p class="video-desc">{{ data.videoDesc }}</p>
       </div>
     </section>
 
@@ -28,9 +28,24 @@
     <section class="wh-grid-section">
       <h2 class="section-title dark-title">必游胜地</h2>
       <div class="wh-grid">
-        <div class="wh-card"><h3>⚓ 刘公岛</h3><p>甲午战争博物院，海岛生态与历史交融，爱国主义教育基</p></div>
-        <div class="wh-card"><h3>🌅 成山头</h3><p>中国海岸最东端，日出第一缕光，天尽头见证奇迹</p></div>
-        <div class="wh-card"><h3>🏖️ 国际海水浴场</h3><p>细沙碧浪绵长，夏日冲浪胜地，最美海岸线之一</p></div>
+        <div class="wh-card" v-for="spot in data.spots" :key="spot.name">
+          <h3>{{ spot.icon }} {{ spot.name }}</h3>
+          <p>{{ spot.desc }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 美食区块 -->
+    <section class="wh-food-section">
+      <h2 class="section-title dark-title">地道风味</h2>
+      <div class="wh-food-list">
+        <div class="food-item" v-for="item in data.food" :key="item.name">
+          <span class="food-icon">🍜</span>
+          <div class="food-info">
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.reason }}</p>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -39,17 +54,19 @@
 <script setup>
 import { ref } from 'vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
+import citiesData from '@/data/citiesData.js'
 
-const videoSrc = `/video/weihai.mp4`
+const CITY_CODE = 'Weihai'
+const data = citiesData[CITY_CODE]
 
-const onVideoPlay = () => console.log('🎬 威海视频播放')
-const onVideoEnd = () => console.log('🎬 威海视频结束')
+const onVideoPlay = () => console.log(`🎬 ${data.name}视频播放`)
+const onVideoEnd = () => console.log(`🎬 ${data.name}视频结束`)
 </script>
 
 <style scoped>
 .weihai {
-  --primary: #48a4b0; /* 威海蓝 */
-  --accent: #fbbf24;  /* 灯塔黄 */
+  --primary: #48a4b0;
+  --accent: #fbbf24;
   --bg-dark: #0a192f;
   --text-light: #f8fafc;
 
@@ -60,7 +77,6 @@ const onVideoEnd = () => console.log('🎬 威海视频结束')
   overflow-x: hidden;
 }
 
-/* Hero 保持灯塔 */
 .wh-hero {
   height: 100vh;
   display: flex;
@@ -72,6 +88,7 @@ const onVideoEnd = () => console.log('🎬 威海视频结束')
   position: relative;
   overflow: hidden;
 }
+
 .wh-light {
   width: 40px;
   height: 120px;
@@ -92,6 +109,7 @@ const onVideoEnd = () => console.log('🎬 威海视频结束')
   border-radius: 50%;
   animation: wh-pulse 2s infinite;
 }
+
 @keyframes wh-pulse {
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.2); }
@@ -189,4 +207,26 @@ const onVideoEnd = () => console.log('🎬 威海视频结束')
 }
 .wh-card h3 { font-size: 20px; color: var(--primary); margin-bottom: 10px; }
 .wh-card p { color: #cbd5e1; line-height: 1.6; }
+
+/* 美食区块 */
+.wh-food-section { padding: 80px 20px; background: var(--bg-dark); text-align: center; }
+.wh-food-list { max-width: 900px; margin: 50px auto 0; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+
+.food-item {
+  flex: 1 1 300px;
+  background: rgba(72, 164, 176, 0.1);
+  border: 1px solid rgba(72, 164, 176, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  text-align: left;
+  transition: 0.3s;
+}
+
+.food-item:hover { border-color: var(--primary); box-shadow: 0 5px 15px rgba(72, 164, 176, 0.2); }
+.food-icon { font-size: 28px; line-height: 1; }
+.food-info h4 { margin: 0 0 8px; color: var(--primary); font-size: 18px; }
+.food-info p { margin: 0; color: #cbd5e1; font-size: 14px; line-height: 1.6; }
 </style>

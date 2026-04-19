@@ -1,10 +1,10 @@
 <template>
   <div class="city-page yantai">
-
     <!-- 1. Hero 区域 -->
     <section class="yt-hero">
-      <h1 class="hero-title">烟台</h1>
-      <p class="hero-sub">仙境海岸 · 百年酒香</p>
+      <div class="yt-orb"></div>
+      <h1 class="hero-title">{{ data.name }}</h1>
+      <p class="hero-sub">{{ data.slogan }}</p>
       <div class="scroll-hint">↓ 探索仙境</div>
     </section>
 
@@ -14,13 +14,13 @@
         <h2 class="section-title">城市映像</h2>
         <div class="video-wrapper">
           <VideoPlayer
-            :src="videoSrc"
+            :src="data.videoSrc"
             :auto-play="false"
             @play="onVideoPlay"
             @end="onVideoEnd"
           />
         </div>
-        <p class="video-desc">葡萄美酒夜光杯，仙境海岸醉人心</p>
+        <p class="video-desc">{{ data.videoDesc }}</p>
       </div>
     </section>
 
@@ -28,9 +28,24 @@
     <section class="yt-masonry-section">
       <h2 class="section-title dark-title">必游胜地</h2>
       <div class="yt-masonry">
-        <div class="yt-card"><h3>🍷 张裕地下酒窖</h3><p>百年橡木桶恒温，解百纳东方风味，亚洲第一地下酒窖</p></div>
-        <div class="yt-card"><h3>🏔️ 蓬莱阁云海</h3><p>八仙过海传说地，海市蜃楼奇观，人间仙境在蓬莱</p></div>
-        <div class="yt-card"><h3>🏝️ 养马岛环岛</h3><p>北方小马尔代夫，浅滩清澈见底，骑行环岛好去处</p></div>
+        <div class="yt-card" v-for="spot in data.spots" :key="spot.name">
+          <h3>{{ spot.icon }} {{ spot.name }}</h3>
+          <p>{{ spot.desc }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 美食区块 -->
+    <section class="yt-food-section">
+      <h2 class="section-title dark-title">地道风味</h2>
+      <div class="yt-food-list">
+        <div class="food-item" v-for="item in data.food" :key="item.name">
+          <span class="food-icon">🍜</span>
+          <div class="food-info">
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.reason }}</p>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -39,16 +54,18 @@
 <script setup>
 import { ref } from 'vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
+import citiesData from '@/data/citiesData.js'
 
-const videoSrc = `/video/yantai.mp4`
+const CITY_CODE = 'Yantai'
+const data = citiesData[CITY_CODE]
 
-const onVideoPlay = () => console.log('🎬 烟台视频播放')
-const onVideoEnd = () => console.log('🎬 烟台视频结束')
+const onVideoPlay = () => console.log(`🎬 ${data.name}视频播放`)
+const onVideoEnd = () => console.log(`🎬 ${data.name}视频结束`)
 </script>
 
 <style scoped>
 .yantai {
-  --primary: #6a5acd; /* 烟台紫 */
+  --primary: #6a5acd;
   --bg-dark: #1a1a3a;
   --text-light: #f1f5f9;
 
@@ -59,7 +76,6 @@ const onVideoEnd = () => console.log('🎬 烟台视频结束')
   overflow-x: hidden;
 }
 
-/* Hero 保持悬浮光球 */
 .yt-hero {
   height: 100vh;
   display: flex;
@@ -171,7 +187,7 @@ const onVideoEnd = () => console.log('🎬 烟台视频结束')
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 16px;
-  transform: perspective(800px) rotateX(2deg); /* 3D 倾斜 */
+  transform: perspective(800px) rotateX(2deg);
   transition: 0.4s;
   text-align: left;
 }
@@ -182,4 +198,26 @@ const onVideoEnd = () => console.log('🎬 烟台视频结束')
 }
 .yt-card h3 { font-size: 20px; color: #e0e7ff; margin-bottom: 10px; }
 .yt-card p { color: #cbd5e1; line-height: 1.6; }
+
+/* 美食区块 */
+.yt-food-section { padding: 80px 20px; background: #252545; text-align: center; }
+.yt-food-list { max-width: 900px; margin: 50px auto 0; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+
+.food-item {
+  flex: 1 1 300px;
+  background: rgba(67,82,192,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  text-align: left;
+  transition: 0.3s;
+}
+
+.food-item:hover { background: rgba(67,82,192,0.5); border-color: var(--primary); box-shadow: 0 5px 15px rgba(106,90,205,0.3); }
+.food-icon { font-size: 28px; line-height: 1; }
+.food-info h4 { margin: 0 0 8px; color: #e0e7ff; font-size: 18px; }
+.food-info p { margin: 0; color: #cbd5e1; font-size: 14px; line-height: 1.6; }
 </style>

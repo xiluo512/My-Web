@@ -179,37 +179,263 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* 完整 CSS 请参考之前输出，此处为精简版 */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-.main-container { position: relative; width: 100%; height: 100vh; overflow: hidden; background: #0b0f19; font-family: 'Segoe UI', system-ui, sans-serif; }
-.slider { position: relative; width: 100%; height: 100%; list-style: none; }
-.item { position: absolute; width: 220px; height: 320px; top: 50%; right: 100px; transform: translateY(-50%); border-radius: 24px; background-size: cover; background-position: center; box-shadow: 0 15px 35px rgba(0,0,0,0.6); transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; opacity: 0.5; filter: blur(2px) grayscale(30%); }
-.item.active { width: 100%; height: 100%; top: 0; right: 0; transform: none; opacity: 1; box-shadow: none; border-radius: 0; cursor: default; filter: none; z-index: 10; }
-.content { position: absolute; top: 50%; left: 8%; transform: translateY(-50%); width: 450px; color: #fff; text-shadow: 0 2px 15px rgba(0,0,0,0.85); opacity: 0; transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s; transform: translateY(-40%); pointer-events: none; }
-.item.active .content { opacity: 1; transform: translateY(-50%); pointer-events: auto; }
-.title { font-size: 3.2rem; font-weight: 800; margin-bottom: 16px; letter-spacing: 1px; line-height: 1.1; }
-.description { font-size: 1.05rem; line-height: 1.7; margin-bottom: 28px; opacity: 0.92; max-width: 90%; }
-.btn-read { padding: 12px 32px; background: transparent; border: 2px solid rgba(255,255,255,0.8); color: #fff; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; border-radius: 8px; transition: all 0.3s ease; backdrop-filter: blur(4px); }
-.btn-read:hover { background: #fff; color: #000; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
-.arrows { position: absolute; left: 35px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 18px; z-index: 20; }
-.arrows button { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 1.3rem; cursor: pointer; transition: all 0.25s ease; display: grid; place-items: center; }
-.arrows button:hover:not(:disabled) { background: rgba(255,255,255,0.3); transform: scale(1.1); }
-.arrows button:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
-.thumbnails { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 16px; z-index: 5; }
-.thumb { width: 60px; height: 80px; border-radius: 12px; background-size: cover; background-position: center; opacity: 0.4; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
-.thumb:hover { opacity: 0.8; transform: scale(1.05); }
-.thumb.active { opacity: 1; border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
-.modal { position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; }
-.modal-content { position: relative; width: 380px; padding: 40px; border-radius: 20px; border: 1px solid rgba(79, 74, 74, 0.448); box-shadow: 0 8px 32px 0 rgba(247, 246, 246, 0.633); color: white; text-align: center; background: rgba(95, 93, 93, 0.573); backdrop-filter: blur(15px); }
-.modal-content h2 { margin-bottom: 30px; font-weight: 600; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-.input-group-modal { margin-bottom: 20px; text-align: left; }
-.input-group-modal label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-.input-group-modal input { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.1); color: white; font-size: 14px; outline: none; transition: all 0.3s ease; }
-.input-group-modal input::placeholder { color: rgba(255, 255, 255, 0.7); }
-.input-group-modal input:focus { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.8); box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
-.login-btn-modal { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 10px; background: rgba(255, 255, 255, 0.9); color: #333; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
-.login-btn-modal:hover { background: #ffffff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3); }
-.modal-fade-enter-active, .modal-fade-leave-active { transition: opacity 0.3s ease; }
-.modal-fade-enter-from, .modal-fade-leave-to { opacity: 0; }
-@media (max-width: 768px) { .item { width: 140px; height: 200px; right: 20px; } .content { width: 85%; left: 5%; } .title { font-size: 2rem; } .thumbnails { display: none; } }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.main-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #0b0f19;
+  font-family: 'Segoe UI', system-ui, sans-serif; }
+.slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  list-style: none;
+}
+.item {
+  position: absolute;
+  width: 220px;
+  height: 320px;
+  top: 50%;
+  right: 100px;
+  transform: translateY(-50%);
+  border-radius: 24px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  opacity: 0.5;
+  filter: blur(2px) grayscale(30%);
+}
+.item.active {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  transform: none;
+  opacity: 1;
+  box-shadow: none;
+  border-radius: 0;
+  cursor: default;
+  filter: none;
+  z-index: 10;
+}
+.content {
+  position: absolute;
+  top: 50%; left: 8%;
+  transform: translateY(-50%);
+  width: 450px;
+  color: #fff;
+  text-shadow: 0 2px 15px rgba(0,0,0,0.85);
+  opacity: 0;
+  transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
+  transform: translateY(-40%);
+  pointer-events: none;
+}
+.item.active .content {
+  opacity: 1;
+  transform: translateY(-50%);
+  pointer-events: auto;
+}
+.title {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+.description {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 28px;
+  opacity: 0.92;
+  max-width: 90%;
+}
+.btn-read {
+  padding: 12px 32px;
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.8);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+.btn-read:hover {
+  background: #fff;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255,255,255,0.2);
+}
+.arrows {
+  position: absolute;
+  left: 35px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  z-index: 20;
+}
+.arrows button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: grid;
+  place-items: center;
+}
+.arrows button:hover:not(:disabled) {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.1);
+}
+.arrows button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.thumbnails {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 5;
+}
+.thumb {
+  width: 60px;
+  height: 80px;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.4;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+.thumb:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+.thumb.active {
+  opacity: 1;
+  border-color: #fff;
+  box-shadow: 0 0 15px rgba(255,255,255,0.4);
+}
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  position: relative;
+  width: 380px;
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(79, 74, 74, 0.448);
+  box-shadow: 0 8px 32px 0 rgba(247, 246, 246, 0.633);
+  color: white; text-align: center;
+  background: rgba(95, 93, 93, 0.573);
+  backdrop-filter: blur(15px);
+}
+.modal-content h2 {
+  margin-bottom: 30px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.input-group-modal {
+  margin-bottom: 20px;
+  text-align: left;
+}
+.input-group-modal label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.input-group-modal input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+.input-group-modal input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+.input-group-modal input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+.login-btn-modal {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.login-btn-modal:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+}
+.modal-fade-enter-active, .modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.modal-fade-enter-from, .modal-fade-leave-to {
+  opacity: 0;
+}
+@media (max-width: 768px) {
+  .item { width: 140px;
+    height: 200px; right: 20px;
+  }
+  .content {
+    width: 85%;
+    left: 5%;
+  }
+  .title {
+    font-size: 2rem;
+  }
+  .thumbnails {
+    display: none;
+  }
+}
 </style>

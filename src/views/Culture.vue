@@ -72,7 +72,7 @@
       <!-- 沉浸式非遗课堂 -->
       <section id="about" class="about-section">
         <div class="about-image hover-target" @mouseenter="handleHover" @mouseleave="handleLeave">
-          <img src="https://images.unsplash.com/photo-1600233050909-7921e9703c36?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="非遗手作">
+          <img src="/public/assets/非遗手作.jpg" alt="非遗手作">
         </div>
         <div class="about-text">
           <h2>沉浸式非遗课堂</h2>
@@ -140,11 +140,11 @@ const cities = ref([
 
 const projects = ref([
   { title: '儒家礼乐', desc: '曲阜三孔 · 汉服拜师 · 雅乐体验', btn: '预约体验', image: 'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80' },
-  { title: '潍坊风筝', desc: '扎制绘制 · 龙头蜈蚣 · 放飞梦想', btn: '动手制作', image: 'https://images.unsplash.com/photo-1533230408703-d72b29338222?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80' },
-  { title: '淄博陶瓷琉璃', desc: '千年瓷都 · 拉坯成型 · 雨点釉', btn: '陶艺体验', image: 'https://images.unsplash.com/photo-1610725664285-7c57e6eeac3f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80' },
-  { title: '皮影与吕剧', desc: '泰山皮影 · 吕剧唱腔 · 民间娱乐', btn: '观赏演出', image: 'https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80' },
-  { title: '泉水茶道', desc: '趵突泉水 · 平阴玫瑰 · 大明湖畔', btn: '品茶静心', image: 'https://images.unsplash.com/photo-1544145945-f371ae2a2d5c?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80' },
-  { title: '水浒武术', desc: '梁山泊遗址 · 习武健身 · 好汉文化', btn: '习武强身', image: 'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80' }
+  { title: '潍坊风筝', desc: '扎制绘制 · 龙头蜈蚣 · 放飞梦想', btn: '动手制作', image: '/assets/潍坊风筝.jpg' },
+  { title: '淄博陶瓷琉璃', desc: '千年瓷都 · 拉坯成型 · 雨点釉', btn: '陶艺体验', image: '/assets/淄博陶瓷琉璃.jpg' },
+  { title: '皮影与吕剧', desc: '泰山皮影 · 吕剧唱腔 · 民间娱乐', btn: '观赏演出', image: '/assets/皮影与吕剧.jpg' },
+  { title: '泉水茶道', desc: '趵突泉水 · 平阴玫瑰 · 大明湖畔', btn: '品茶静心', image: '/assets/泉水茶道.jpg' },
+  { title: '齐鲁文物', desc: '大汶口遗址 · 古籍图书 · 好汉文化', btn: '观古思今', image: '/assets/山东文物.jpg' }
 ])
 
 const courses = ref([
@@ -379,7 +379,7 @@ nav a:hover::after { width: 100%; }
 }
 .hero-bg {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  background-image: url('https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+  background-image: url("../assets/culture.jpg");
   background-size: cover; background-position: center;
   filter: grayscale(100%) brightness(0.7);
   z-index: -1; transform: scale(1.1);
