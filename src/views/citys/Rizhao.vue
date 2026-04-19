@@ -2,6 +2,7 @@
   <div class="city-page rizhao">
     <!-- 1. Hero 区域 -->
     <section class="rz-hero">
+      <OceanParticles color="#ffd700" :density="150" :speed="2" />
       <!-- Canvas 光线动画 -->
       <canvas ref="rzCanvas" class="rz-canvas"></canvas>
 
@@ -59,7 +60,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
 import citiesData from '@/data/citiesData.js'
-
+import OceanParticles from '@/components/OceanParticles.vue'
 const CITY_CODE = 'Rizhao'
 const data = citiesData[CITY_CODE]
 

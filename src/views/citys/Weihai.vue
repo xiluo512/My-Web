@@ -1,7 +1,9 @@
 <template>
   <div class="city-page weihai">
     <!-- 1. Hero 区域 -->
+
     <section class="wh-hero">
+      <OceanParticles color="#add8e6" :density="80" :speed="1" />
       <div class="wh-light"></div>
       <h1 class="hero-title">{{ data.name }}</h1>
       <p class="hero-sub">{{ data.slogan }}</p>
@@ -55,7 +57,7 @@
 import { ref } from 'vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
 import citiesData from '@/data/citiesData.js'
-
+import OceanParticles from '@/components/OceanParticles.vue'
 const CITY_CODE = 'Weihai'
 const data = citiesData[CITY_CODE]
 

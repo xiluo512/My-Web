@@ -1,9 +1,9 @@
 <template>
   <!-- 修复了 class 写法，加入 :class 动态绑定 -->
   <div class="city-page qingdao" :class="data.code">
-
     <!-- 1. Hero 区域 (深色背景 + 海浪) -->
     <section class="qd-hero">
+    <OceanParticles color="#00ffff" :density="120" :speed="1.5" />
       <!-- 补上了你 CSS 里写的海浪 div -->
       <div class="qd-wave"></div>
       <h1 class="hero-title">{{ data.name }}</h1>
@@ -62,7 +62,7 @@
 import { ref } from 'vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
 import citiesData from '@/data/citiesData.js'
-
+import OceanParticles from '@/components/OceanParticles.vue'
 // 🔑 核心：定义城市代码
 const CITY_CODE = 'Qingdao'
 const data = citiesData[CITY_CODE]

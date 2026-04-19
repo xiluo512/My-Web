@@ -271,7 +271,7 @@ const newPost = ref({
 const canSubmit = computed(() => {
   return newPost.value.title.trim().length >= 2 &&
          newPost.value.title.trim().length <= 50 &&
-         newPost.value.content.trim().length >= 5
+         newPost.value.content.trim().length >= 1
 })
 
 // 切换 Tab
@@ -301,7 +301,7 @@ const closeModal = () => {
 }
 //编辑表单凭证
 const canEditSubmit = computed(() => {
-  return editForm.value.title.trim().length >= 2 &&
+  return editForm.value.title.trim().length >= 1 &&
          editForm.value.title.trim().length <= 50
 })
 // 提交新帖子
