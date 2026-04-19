@@ -35,6 +35,7 @@
           <li><router-link to="/food">鲁菜美食</router-link></li>
           <li><a href="#planning" @click.prevent="scrollToPlanning">路线规划</a></li>
           <li><router-link to="/forum">旅行论坛</router-link></li>
+          <router-link to="/route"><button>🤖 智能路线规划</button></router-link>
         </ul>
       </nav>
     </header>
@@ -81,7 +82,7 @@
           <router-link to="/culture" class="btn-outline">探索更多文化</router-link>
         </div>
         <div class="image-block">
-          <img src="@/assets/culture.jpg" alt="山东非遗文化" @error="handleImageError">
+          <img src="@/assets/传统文化.jpg" alt="山东非遗文化" @error="handleImageError">
         </div>
       </div>
     </section>
@@ -167,25 +168,25 @@ const spots = ref([
   {
     title: '泰安 · 泰山',
     desc: '五岳独尊，天下第一山。看旭日东升，观云海玉盘，感受帝王封禅的庄严与雄伟。',
-    image: '@/assets/taishan.jpg',
+    image: '@/assets/泰山.jpg',
     path: '/spot/taishan'
   },
   {
     title: '济宁 · 曲阜三孔',
     desc: '孔庙、孔府、孔林。走进儒家文化的发源地，追寻至圣先师孔子的足迹。',
-    image: '@/assets/sankong.jpg',
+    image: '@/assets/曲阜三孔.jpg',
     path: '/spot/sankong'
   },
   {
     title: '济南 · 趵突泉',
     desc: '天下第一泉，四面荷花三面柳。在泉水叮咚中，体验老济南的悠闲与惬意。',
-    image: '@/assets/baotuquan.jpg',
+    image: '@/assets/趵突泉.jpg',
     path: '/spot/baotuquan'
   },
   {
     title: '烟台 · 蓬莱阁',
     desc: '人间仙境，八仙过海。探寻海市蜃楼的奥秘，眺望黄渤海分界线的奇观。',
-    image: '@/assets/penglai.jpg',
+    image: '@/assets/蓬莱阁.jpg',
     path: '/spot/penglai'
   }
 ])
@@ -203,22 +204,22 @@ const dishes = ref([
   {
     title: '济南 · 九转大肠',
     desc: '鲁菜经典，酸、甜、香、辣、咸五味俱全。色泽红润，质地软嫩，回味无穷。',
-    image: '@/assets/jiuzhuanchang.jpg'
+    image: '@/assets/九转大肠.jpg'
   },
   {
     title: '青岛啤酒',
     desc: '喝袋装啤酒，吃辣炒蛤蜊。感受海滨城市的豪爽与清凉，夏日夜晚的绝配。',
-    image: '@/assets/qingdao-beer.jpg'
+    image: '@/assets/青岛啤酒.jpg'
   },
   {
     title: '临沂/泰安 · 煎饼卷大葱',
     desc: '山东人的硬核早餐。五谷杂粮制成的煎饼，配上章丘大葱和甜面酱，越嚼越香。',
-    image: '@/assets/jianbing.jpg'
+    image: '@/assets/煎饼.jpg'
   },
   {
     title: '胶东 · 鲅鱼水饺',
     desc: '个大馅足，鲜嫩多汁。选用新鲜鲅鱼肉，去刺搅打上劲，一口咬下满嘴鲜香。',
-    image: '@/assets/bayujiaozi.jpg'
+    image: '@/assets/鲅鱼水饺.jpg'
   }
 ])
 
@@ -260,7 +261,7 @@ const scrollToPlanning = () => {
 const handleCustomRoute = () => {
   // 实际项目中可跳转到路线规划页面或打开模态框
   alert('即将跳转到路线规划页面')
-  // router.push('/planning')
+  router.push('/RoutePlanner')
 }
 
 const handleImageError = (e) => {

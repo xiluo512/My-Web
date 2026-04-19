@@ -34,6 +34,11 @@ const routes = [
   // 预留路由（按需扩展）
   /*{ path: '/city/:name', component: () => import('../views/City.vue') },
   { path: '/spot/:name', component: () => import('../views/Spot.vue') },*/
+  {
+    path: '/route',
+    name: 'route-planner',
+    component: () => import('@/views/RoutePlanner.vue')
+  }
 ]
 
 const router = createRouter({
