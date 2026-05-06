@@ -4,7 +4,7 @@
       <router-link to="/">齐鲁神韵 <span>SHANDONG TOURISM</span></router-link>
     </div>
     <nav>
-      <router-link to="/">首页</router-link>
+      <router-link to="/index">首页</router-link>
 
       <div class="dropdown">
         <span>好客山东 ▾</span>
@@ -17,19 +17,31 @@
 
       <router-link to="/culture">文化体验</router-link>
       <router-link to="/food">鲁菜美食</router-link>
-      <router-link to="/planning">路线规划</router-link>
+      <router-link to="/route">AI 行程</router-link>
       <router-link to="/forum">旅行论坛</router-link>
-      <router-link to="/login" class="btn-login">登录</router-link>
+      <router-link to="/" class="btn-login">登录</router-link>
     </nav>
   </header>
 </template>
 
 <script setup>
 const cities = [
-  { name: '济南市', path: '/city/jinan' },
-  { name: '青岛市', path: '/city/qingdao' },
-  { name: '淄博市', path: '/city/zibo' },
-  // 其他城市可按需补充...
+  { name: '济南市', path: '/jinan' },
+  { name: '青岛市', path: '/qingdao' },
+  { name: '淄博市', path: '/zibo' },
+  { name: '枣庄市', path: '/zaozhuang' },
+  { name: '东营市', path: '/dongying' },
+  { name: '烟台市', path: '/yantai' },
+  { name: '潍坊市', path: '/weifang' },
+  { name: '济宁市', path: '/jining' },
+  { name: '泰安市', path: '/taian' },
+  { name: '威海市', path: '/weihai' },
+  { name: '日照市', path: '/rizhao' },
+  { name: '临沂市', path: '/linyi' },
+  { name: '德州市', path: '/dezhou' },
+  { name: '聊城市', path: '/liaocheng' },
+  { name: '滨州市', path: '/binzhou' },
+  { name: '菏泽市', path: '/heze' }
 ]
 </script>
 

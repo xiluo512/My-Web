@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { fetchPostsApi, createPostApi, fetchCategoriesApi } from '@/mock/forumApi'
 import { updatePostApi, deletePostApi } from '@/mock/forumApi'
+import { toggleLikePostApi, getLikedPostIds } from '@/mock/forumApi'
 
 export const useForumStore = defineStore('forum', () => {
   // 状态
@@ -13,6 +14,7 @@ export const useForumStore = defineStore('forum', () => {
   const isPosting = ref(false)
   const error = ref('')
   const editingPost = ref(null)
+  const likedPostIds = ref([])
 
 
 
@@ -23,11 +25,24 @@ export const useForumStore = defineStore('forum', () => {
     try {
       currentTab.value = tab
       posts.value = await fetchPostsApi(tab)
+      likedPostIds.value = getLikedPostIds()
     } catch (e) {
       error.value = '加载失败，请重试'
       console.error(e)
     } finally {
       isLoading.value = false
+    }
+  }
+
+  async function toggleLike(postId) {
+    try {
+      const res = await toggleLikePostApi(postId)
+      likedPostIds.value = getLikedPostIds()
+      const index = posts.value.findIndex(p => p.id === postId)
+      if (index !== -1) posts.value[index].likes = res.likes
+      return { success: true, liked: res.liked }
+    } catch (e) {
+      return { success: false, error: e.message }
     }
   }
 
@@ -121,5 +136,6 @@ export const useForumStore = defineStore('forum', () => {
     posts, categories, currentTab, isLoading, isPosting, error,
     loadPosts, loadCategories, publishPost, enterCategory, openPost,
     editingPost, editPost, removePost, startEdit, cancelEdit
+    , likedPostIds, toggleLike
   }
 })

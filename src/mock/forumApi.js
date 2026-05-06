@@ -15,6 +15,24 @@ const savePosts = (posts) => {
   localStorage.setItem('shandong_forum_posts', JSON.stringify(posts))
 }
 
+const getCurrentUsername = () => {
+  const username = localStorage.getItem('username')
+  if (username) return username
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  return user.username || '旅行者'
+}
+
+const getLikeKey = () => `shandong_forum_likes_${getCurrentUsername()}`
+
+export const getLikedPostIds = () => {
+  const raw = localStorage.getItem(getLikeKey())
+  return raw ? JSON.parse(raw) : []
+}
+
+const saveLikedPostIds = (ids) => {
+  localStorage.setItem(getLikeKey(), JSON.stringify(ids))
+}
+
 // 1. 获取帖子列表
 export const fetchPostsApi = async (tab = '最新帖子') => {
   await delay(500)
@@ -28,7 +46,7 @@ export const fetchPostsApi = async (tab = '最新帖子') => {
 export const createPostApi = async (postData) => {
   await delay(600)
 
-  const currentUser = JSON.parse(localStorage.getItem('user') || '{"username":"旅行者"}')
+  const currentUser = { username: getCurrentUsername() }
 
   const newPost = {
     id: Date.now(),
@@ -47,6 +65,25 @@ export const createPostApi = async (postData) => {
   savePosts(posts)
 
   return newPost
+}
+
+export const toggleLikePostApi = async (postId) => {
+  await delay(200)
+  const posts = getStoredPosts()
+  const target = posts.find(p => p.id === postId)
+  if (!target) throw new Error('帖子不存在')
+
+  const likedIds = getLikedPostIds()
+  const alreadyLiked = likedIds.includes(postId)
+  const nextLikedIds = alreadyLiked
+    ? likedIds.filter(id => id !== postId)
+    : [...likedIds, postId]
+  saveLikedPostIds(nextLikedIds)
+
+  const currentLikes = Number(target.likes || 0)
+  target.likes = alreadyLiked ? Math.max(0, currentLikes - 1) : currentLikes + 1
+  savePosts(posts)
+  return { liked: !alreadyLiked, likes: target.likes }
 }
 
 // 3. 获取版块列表

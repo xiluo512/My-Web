@@ -1,0 +1,7 @@
+fastapi>=0.115.0
+uvicorn>=0.34.0
+pymysql>=1.1.0
+python-dotenv>=1.0.0
+openai>=1.0.0
+pydantic>=2.0.0
+# 密码哈希使用 Python 内置 hashlib，无需额外依赖

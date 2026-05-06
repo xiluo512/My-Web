@@ -59,7 +59,18 @@
             </div>
           </div>
           <div class="post-stats">
-            回复：<span class="stat-num">{{ post.replies }}</span> • 查看：<span class="stat-num">{{ post.views }}</span>
+            回复：<span class="stat-num">{{ post.replies }}</span> •
+            查看：<span class="stat-num">{{ post.views }}</span> •
+            点赞：<span class="stat-num">{{ post.likes || 0 }}</span>
+          </div>
+          <div class="post-like">
+            <button
+              class="btn-like"
+              :class="{ active: forumStore.likedPostIds.includes(post.id) }"
+              @click="handleLikePost(post)"
+            >
+              {{ forumStore.likedPostIds.includes(post.id) ? '已点赞' : '点赞' }}
+            </button>
           </div>
           <!-- 操作按钮（仅作者可见） -->
           <div v-if="isPostOwner(post)" class="post-actions">
@@ -403,6 +414,13 @@ const handleEditPost = (post) => {
     } catch (err) {
       console.error('删除异常:', err)
     }
+  }
+}
+
+const handleLikePost = async (post) => {
+  const res = await forumStore.toggleLike(post.id)
+  if (!res.success) {
+    alert(`点赞失败：${res.error}`)
   }
 }
 // 初始化
@@ -865,6 +883,24 @@ footer { background: #150303; color: #666; text-align: center; padding: 40px; ma
   display: flex;
   gap: 8px;
   margin-left: 15px;
+}
+
+.post-like {
+  margin-left: 10px;
+}
+
+.btn-like {
+  padding: 6px 12px;
+  border: 1px solid #d4af37;
+  background: transparent;
+  color: #d4af37;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-like.active {
+  background: #d4af37;
+  color: #2c0e0e;
 }
 
 .btn-edit,

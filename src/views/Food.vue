@@ -28,8 +28,8 @@
 
           <li><router-link to="/culture">文化体验</router-link></li>
           <li><router-link to="/food" class="active">地域美食</router-link></li>
-          <li><a href="#planning" @click.prevent="scrollToPlanning">路线规划</a></li>
           <li><router-link to="/forum">旅行论坛</router-link></li>
+          <li><router-link to="/route">🤖 AI助手</router-link></li>
         </ul>
       </nav>
     </header>
